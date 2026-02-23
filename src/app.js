@@ -1,0 +1,20 @@
+import express from "express";
+import cors from "cors";
+import morgan from "morgan"
+import cookieParcer from "cookie-parser"
+
+const app = express();
+
+//middlewares
+app.use(cors()); //It allows to interact with the client whivh is loaded in different domain
+app.use(express.json()); //Instructs the app to accept the data in json format
+app.use(express.urlencoded({extended:true})) //Instructs the app to accept data in the url encoded format as well
+app.use(morgan("dev")) //Logs requests, errors and more to the console 
+app.use(cookieParcer()) // It allows the server to acces the cookies
+
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello</h1>");
+});
+
+export default app;
