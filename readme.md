@@ -1,5 +1,5 @@
 ## MVC Architecture 
 
-model 
-view / Client 
-controllers
+* model 
+* view / Client 
+* controllers
