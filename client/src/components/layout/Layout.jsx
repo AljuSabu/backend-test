@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 const Layout = ({ description, keywords, author, title }) => {
   return (
     <>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" richColors />
       <Helmet>
         <meta charSet="utf-8" />
         <meta name="description" content={description} />

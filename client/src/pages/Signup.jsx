@@ -4,30 +4,38 @@ import { Helmet } from "react-helmet";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
         "http://localhost:4000/api/v1/auth/signup",
-        { name: fullName, email, password, address, phone, role: "user" },
+        { name, email, password, address, phone, role },
       );
-      console.log(data);
-      alert(data);
+      // console.log(data);
+      // alert(data);
+      if (data && data.success) {
+        toast.success(data.message);
+        navigate("/login");
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-      // toast.success("Successfully Signed Up");
       console.log(error);
-      alert("Successfully Signed Up");
+      toast.error("Something went wrong");
     }
   };
 
@@ -40,7 +48,7 @@ const Signup = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-stone-200 p-8 md:p-12 w-full max-w-lg rounded-2xl shadow-xl shadow-zinc-200/50"
+          className="bg-taupe-200 p-8 md:p-12 w-full max-w-lg rounded-2xl shadow-xl shadow-zinc-200/50"
         >
           <div className="text-center mb-10">
             <h1 className="text-3xl font-serif mb-2">Create Account</h1>
@@ -57,9 +65,9 @@ const Signup = () => {
               <input
                 type="text"
                 required
-                value={fullName}
+                value={name}
                 onChange={(e) => {
-                  setFullName(e.target.value);
+                  setName(e.target.value);
                 }}
                 className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors text-sm"
               />
@@ -132,10 +140,12 @@ const Signup = () => {
               </label>
               <select
                 name="role"
+                required
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors text-sm appearance-none cursor-pointer"
               >
+                <option value="">Select Role</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>

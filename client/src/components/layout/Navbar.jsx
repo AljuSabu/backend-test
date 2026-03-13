@@ -47,9 +47,9 @@ const Navbar = () => {
             </div>
 
             <div className="hidden md:flex items-center space-x-5">
-              <button className="text-zinc-600 hover:text-zinc-900 transition-colors">
+              {/* <button className="text-zinc-600 hover:text-zinc-900 transition-colors">
                 <SearchIcon />
-              </button>
+              </button> */}
               <Link
                 to="/login"
                 className="text-zinc-600 hover:text-zinc-900 transition-colors"

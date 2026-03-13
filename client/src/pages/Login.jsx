@@ -3,25 +3,43 @@ import { Helmet } from "react-helmet";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "motion/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const navigate = useNavigate();
+  const { auth, setAuth } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
         "http://localhost:4000/api/v1/auth/login",
-        { email, password },
+        {
+          email,
+          password,
+        },
       );
-      console.log(data);
-      alert(data);
+      if (data && data.success) {
+        toast.success(data.message);
+        setAuth({
+          ...auth,
+          user:data.user,
+          token:data.token
+        })
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
       console.log(error);
-      alert("Successfully logged in");
+      toast.error("Something went wrong");
     }
   };
 
@@ -44,25 +62,13 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors text-sm"
-              />
-            </div> */}
-
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">
                 Email Address
               </label>
               <input
                 type="email"
-                name="email"
+                placeholder="abcd@gmail.com"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -101,28 +107,18 @@ const Login = () => {
 
             {/* <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                required
-                className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors text-sm"
-              />
-            </div> */}
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">
                 Account Type
               </label>
               <select
                 name="role"
+                required
                 className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:outline-none transition-colors text-sm appearance-none cursor-pointer"
               >
+                <option value="">Select Role</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
-            </div>
+            </div> */}
 
             <button
               type="submit"
@@ -132,6 +128,18 @@ const Login = () => {
               <ArrowForwardIcon className="ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-zinc-500">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-zinc-900 font-bold hover:underline"
+              >
+                Join the Club
+              </Link>
+            </p>
+          </div>
         </motion.div>
       </div>
     </>

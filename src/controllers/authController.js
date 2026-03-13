@@ -11,8 +11,8 @@ export const cookieOptions = {
 
 export const signup = async (req, res) => {
   try {
-    console.log(req.body);
-
+    // console.log(req.body);
+    
     // Get info from Frontend
     const { name, email, password, phone, address, role } = req.body;
 
@@ -29,7 +29,7 @@ export const signup = async (req, res) => {
 
     // Send response if the user exists
     if (existingUser) {
-      return res.status(409).json({
+      return res.status(200).json({
         success: false,
         message: "User already exists , Please login",
       });
@@ -78,7 +78,6 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    console.log(req.body);
     
     // Get info from the frontend
     const { email, password } = req.body;
